@@ -43,10 +43,16 @@ users = {
         'jana' :'5432',
         'rozi' :'spokojenec'
         }
-user = input('Zadejte sve prihlasovaci jmeno: ')
-password = input ('Vlozte heslo: ')
-if users.get(user) != password:
-    print('Uzivatelske jmeno nebo heslo se neshoduje')
-    exit()
-else:
 
+pokracovat = 0
+while pokracovat < 3:
+    user = input('Zadejte sve prihlasovaci jmeno: ')
+    password = input('Vlozte heslo: ')
+    if users.get(user) == password:
+        print('Pokracuji...')
+        break
+    else:
+        print('Uzivatelske jmeno nebo heslo se neshoduje, zadejte znovu')
+        pokracovat += 1
+# selection from list
+user_choice = int(input('Vyberte ze zadaneho textu: '))
