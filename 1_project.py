@@ -33,6 +33,7 @@ garpike and stingray are also present.'''
 
 # 1. step - gr. user
 oddelovac = '='*40
+cislo_textu = (1,2,3)
 print(oddelovac)
 print('Vita vas Textovy analyzator v1.0')
 print(oddelovac)
@@ -44,24 +45,35 @@ users = {
         'rozi' :'spokojenec'
         }
 
-pokracovat = 0
-while pokracovat < 3:
-    user = input('Zadejte sve prihlasovaci jmeno: ')
-    password = input('Vlozte heslo: ')
-    if users.get(user) == password:
-        print('Pokracuji...')
-        break
-    else:
-        print('Uzivatelske jmeno nebo heslo se neshoduje, zadejte znovu')
-        pokracovat += 1
+# pokracovat = 0
+# while pokracovat < 3:
+#     user = input('Zadejte sve prihlasovaci jmeno: ')
+#     password = input('Vlozte heslo: ')
+#     if users.get(user) == password:
+#         print('Pokracuji...')
+#         break
+#     else:
+#         print('Uzivatelske jmeno nebo heslo se neshoduje, zadejte znovu')
+#         pokracovat += 1
 print(oddelovac)
 # selection from list
 user_choice = int(input(f'''Nahrane jsou celkem {len(TEXTS)} textove soubory,
 Vyberte jednu z moznosti (1,2 nebo 3): '''))
-user_choice = TEXTS[-1]
+spravny_text = TEXTS[user_choice-1]
 print(oddelovac)
-print(user_choice)
+print(spravny_text)
 print(oddelovac)
 # word count
-word_count = user_choice.split()
-print(f'Ve Vami zlovenem textu je celkem {len(word_count)} slov')
+word_count = spravny_text.split()
+print(f'Ve Vami zvolenem textu je celkem {len(word_count)} slov')
+# titlecase words
+velka =[]
+mala = []
+for word in word_count:
+    if velka.append(word) if word[0].isupper():
+        print(velka)
+    else:
+        mala.append(word)
+
+titlecase_1 = word_count.
+print(f'Ve Vami zvolenem textu je celkem {sum(titlecase_1)}')
