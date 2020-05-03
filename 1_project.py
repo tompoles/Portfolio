@@ -33,6 +33,7 @@ garpike and stingray are also present.'''
 
 # 1. step - gr. user
 oddelovac = '='*40
+oddelovac_2 = '-'*40
 cislo_textu = (1,2,3)
 print(oddelovac)
 print('Vita vas Textovy analyzator v1.0')
@@ -65,15 +66,28 @@ print(spravny_text)
 print(oddelovac)
 # word count
 word_count = spravny_text.split()
-print(f'Ve Vami zvolenem textu je celkem {len(word_count)} slov')
+print(f'Ve Vami zvolenem textu je celkem {len(word_count)} slov.')
+print(oddelovac_2)
 # titlecase words
-velka =[]
-mala = []
-for word in word_count:
-    if velka.append(word) if word[0].isupper():
-        print(velka)
-    else:
-        mala.append(word)
+str = spravny_text
+velka = 0
+for vel in str:
+    if vel.istitle():
+        velka += 1
+print(f'''Ve Vami zvolenem textu je celkem {velka} slov,
+ktere zacinaji velkym pismenem.''')
+print(oddelovac_2)
+# uppercase words
+str2 = spravny_text
+upper = 0
+for upp in str2:
+    if upp.isupper():
+        print(f'''Ve Vami zvolenem textu je celkem {upper} slov,
+ktere jsou velkym pismenem.''')
+        break
+print(oddelovac_2)
 
-titlecase_1 = word_count.
-print(f'Ve Vami zvolenem textu je celkem {sum(titlecase_1)}')
+
+
+
+
