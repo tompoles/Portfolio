@@ -54,5 +54,14 @@ while pokracovat < 3:
     else:
         print('Uzivatelske jmeno nebo heslo se neshoduje, zadejte znovu')
         pokracovat += 1
+print(oddelovac)
 # selection from list
-user_choice = int(input('Vyberte ze zadaneho textu: '))
+user_choice = int(input(f'''Nahrane jsou celkem {len(TEXTS)} textove soubory,
+Vyberte jednu z moznosti (1,2 nebo 3): '''))
+user_choice = TEXTS[-1]
+print(oddelovac)
+print(user_choice)
+print(oddelovac)
+# word count
+word_count = user_choice.split()
+print(f'Ve Vami zlovenem textu je celkem {len(word_count)} slov')
