@@ -78,16 +78,25 @@ print(f'''Ve Vami zvolenem textu je celkem {velka} slov,
 ktere zacinaji velkym pismenem.''')
 print(oddelovac_2)
 # uppercase words
-str2 = spravny_text
-upper = 0
-for upp in str2:
-    if upp.isupper():
-        print(f'''Ve Vami zvolenem textu je celkem {upper} slov,
+spravny_text2 = spravny_text.split()
+str = spravny_text2
+velka2 = 0
+for vel2 in str:
+    if vel2.isupper():
+        velka2 +=1
+print(f'''Ve Vami zvolenem textu je celkem {velka2} slov,
 ktere jsou velkym pismenem.''')
-        break
 print(oddelovac_2)
+# lowercase words
+str = spravny_text2
+lower = 0
+for low in str:
+    if low.islower():
+        lower +=1
+print(f'''Ve Vami zvolenem textu je celkem {lower} slov,
+ktere jsou malym pismenem.''')
 
-
+print(oddelovac_2)
 
 
 
