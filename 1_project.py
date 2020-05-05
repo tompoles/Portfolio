@@ -113,7 +113,6 @@ print(f'''Ve Vami zvolenem textu je celkem {numeric}
 print(oddelovac)
 
 # bar chart
-
 cisty_text = [slovo.strip('.,') for slovo in spravny_text2]
 cislo= [len(slovo) for slovo in cisty_text]
 pocet = {x:cislo.count(x) for x in cislo}
@@ -122,9 +121,15 @@ nejcastejsi_delka = sorted(pocet, key=pocet.get, reverse=False)[:]
 for num, hodnota in enumerate(range(len(pocet), 0, -1), 1):
     for index in nejcastejsi_delka:
         velikost = index
-        print(f"{index}: {int(velikost)*'*'}  {pocet[index]} x")
+        print(f"{index}: {pocet[index]*'*'} {pocet[index]} x")
         nejcastejsi_delka.remove(index)
         break
+
+print(spravny_text2)
+# Sum of all digits
+for cislo in spravny_text2:
+    num = int(cislo)
+    print(num)
 
 
 
