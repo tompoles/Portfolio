@@ -32,14 +32,14 @@ garpike and stingray are also present.'''
 ]
 
 # 1. step - gr. user
-oddelovac = '='*40
-oddelovac_2 = '-'*40
-cislo_textu = (1,2,3)
+oddelovac= '='*40
+oddelovac_2= '-'*40
+cislo_textu= (1,2,3)
 print(oddelovac)
 print('Vita vas Textovy analyzator v1.0')
 print(oddelovac)
 # user's data
-users = {
+users= {
         'novak':'1234',
         'poles':'nikon',
         'jana' :'5432',
@@ -57,46 +57,84 @@ users = {
 #         print('Uzivatelske jmeno nebo heslo se neshoduje, zadejte znovu')
 #         pokracovat += 1
 print(oddelovac)
+
 # selection from list
-user_choice = int(input(f'''Nahrane jsou celkem {len(TEXTS)} textove soubory,
+user_choice=int(input(f'''Nahrane jsou celkem {len(TEXTS)}  textove soubory,
 Vyberte jednu z moznosti (1,2 nebo 3): '''))
-spravny_text = TEXTS[user_choice-1]
+spravny_text = TEXTS[user_choice -1]
 print(oddelovac)
 print(spravny_text)
 print(oddelovac)
+
 # word count
-word_count = spravny_text.split()
+word_count=spravny_text.split()
 print(f'Ve Vami zvolenem textu je celkem {len(word_count)} slov.')
-print(oddelovac_2)
+print(oddelovac)
+
 # titlecase words
-str = spravny_text
+str=spravny_text
 velka = 0
 for vel in str:
     if vel.istitle():
         velka += 1
 print(f'''Ve Vami zvolenem textu je celkem {velka} slov,
-ktere zacinaji velkym pismenem.''')
+      ktere zacinaji velkym pismenem.''')
 print(oddelovac_2)
+
 # uppercase words
-spravny_text2 = spravny_text.split()
-str = spravny_text2
+spravny_text2=spravny_text.split()
+str=spravny_text2
 velka2 = 0
 for vel2 in str:
     if vel2.isupper():
-        velka2 +=1
+        velka2 += 1
 print(f'''Ve Vami zvolenem textu je celkem {velka2} slov,
-ktere jsou velkym pismenem.''')
+      ktere jsou napsany velkym pismenem.''')
 print(oddelovac_2)
+
 # lowercase words
-str = spravny_text2
+str=spravny_text2
 lower = 0
 for low in str:
     if low.islower():
         lower +=1
 print(f'''Ve Vami zvolenem textu je celkem {lower} slov,
-ktere jsou malym pismenem.''')
-
+      ktere jsou napsany malym pismenem.''')
 print(oddelovac_2)
+
+# number of digits
+str=spravny_text2
+numeric = 0
+for num in str:
+    if num.isnumeric():
+        numeric += 1
+print(f'''Ve Vami zvolenem textu je celkem {numeric} 
+      ciselnych stringu.''')
+print(oddelovac)
+
+# bar chart
+
+# graf = {}
+# print(len(spravny_text2))
+# for slovo in spravny_text2:
+#     graf[slovo] = graf.setdefault(slovo, 0) + 1
+# print(sorted(graf))
+
+cisty_text = [slovo.strip('.,') for slovo in spravny_text2]
+pocet = [len(slovo) for slovo in cisty_text]
+
+nejcastejsi_slov = sorted(vyskyt_slov, key=vyskyt_slov.get, reverse=True)[:5]
+print(nejcastejsi_slova)
+print(pocet)
+for index, cislo in enumerate(range(len(nejcast), 0, -1), 1):
+    print('='*30)
+    print(f'{index}', end=', ')
+    for slovo in nejcastejsi_slova:
+        print(f"slovo: {slovo}, vyskyt: {vyskyt_slov[slovo]} x")
+        nejcastejsi_slova.remove(slovo)
+        break
+
+
 
 
 
