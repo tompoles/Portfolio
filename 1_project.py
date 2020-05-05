@@ -115,33 +115,19 @@ print(oddelovac)
 # bar chart
 
 cisty_text = [slovo.strip('.,') for slovo in spravny_text2]
-pocet= [len(slovo) for slovo in cisty_text]
-nejcastejsi_delka = sorted(pocet,  reverse=False)
-pocet = {x:nejcastejsi_delka.count(x) for x in nejcastejsi_delka}
-nejcastejsi_delka = sorted(pocet, key=pocet.get, reverse=False)[:13]
-print(pocet)
-print(nejcastejsi_delka)
+cislo= [len(slovo) for slovo in cisty_text]
+pocet = {x:cislo.count(x) for x in cislo}
+nejcastejsi_delka = sorted(pocet, key=pocet.get, reverse=False)[:]
+
 for num, hodnota in enumerate(range(len(pocet), 0, -1), 1):
-    print(f'{num}', end=', ')
     for index in nejcastejsi_delka:
-        print(f"slovo: {index}, vyskyt: {pocet[index]} x")
+        velikost = index
+        print(f"{index}: {int(velikost)*'*'}  {pocet[index]} x")
         nejcastejsi_delka.remove(index)
         break
 
 
 
-# x = list(pocet.values())
-# y = list(pocet.keys())
-# print(x)
-# print(y)
-# print(pocet[1])
-
-# for index, cislo in enumerate(range(len(pocet), 0, -1), 1):
-#     print('='*30)
-#     print(f'{index}', end=', ')
-#     for slovo in pocet:
-#         print(f"slovo: {slovo}, vyskyt: {pocet[slovo]} x")
-#         break
 
 
 
