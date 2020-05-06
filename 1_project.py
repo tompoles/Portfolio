@@ -108,6 +108,7 @@ numeric = 0
 for num in str:
     if num.isnumeric():
         numeric += 1
+        type(numeric)
 print(f'''Ve Vami zvolenem textu je celkem {numeric} 
       ciselnych stringu.''')
 print(oddelovac)
@@ -125,11 +126,16 @@ for num, hodnota in enumerate(range(len(pocet), 0, -1), 1):
         nejcastejsi_delka.remove(index)
         break
 
-print(spravny_text2)
-# Sum of all digits
-for cislo in spravny_text2:
-    num = int(cislo)
-    print(num)
+# # Sum of all digits
+sum_digit = dict()
+for digit in spravny_text2:
+    sum_digit[digit.isnumeric()]
+    print(sum_digit)
+
+
+
+
+
 
 
 
