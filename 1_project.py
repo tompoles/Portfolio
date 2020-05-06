@@ -1,5 +1,5 @@
 '''
-author = Tomas Polacek
+author = Tomas Polacek @tompoles
 '''
 TEXTS = ['''
 Situated about 10 miles west of Kemmerer, 
