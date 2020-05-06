@@ -45,17 +45,17 @@ users= {
         'jana' :'5432',
         'rozi' :'spokojenec'
         }
-
-# pokracovat = 0
-# while pokracovat < 3:
-#     user = input('Zadejte sve prihlasovaci jmeno: ')
-#     password = input('Vlozte heslo: ')
-#     if users.get(user) == password:
-#         print('Pokracuji...')
-#         break
-#     else:
-#         print('Uzivatelske jmeno nebo heslo se neshoduje, zadejte znovu')
-#         pokracovat += 1
+# user's log in
+pokracovat = 0
+while pokracovat < 3:
+    user = input('Zadejte sve prihlasovaci jmeno: ')
+    password = input('Vlozte heslo: ')
+    if users.get(user) == password:
+        print('Pokracuji...')
+        break
+    else:
+        print('Uzivatelske jmeno nebo heslo se neshoduje, zadejte znovu')
+        pokracovat += 1
 print(oddelovac)
 
 # selection from list
@@ -72,9 +72,8 @@ print(f'Ve Vami zvolenem textu je celkem {len(word_count)} slov.')
 print(oddelovac)
 
 # titlecase words
-str=spravny_text
 velka = 0
-for vel in str:
+for vel in word_count:
     if vel.istitle():
         velka += 1
 print(f'''Ve Vami zvolenem textu je celkem {velka} slov,
@@ -82,10 +81,8 @@ print(f'''Ve Vami zvolenem textu je celkem {velka} slov,
 print(oddelovac_2)
 
 # uppercase words
-spravny_text2=spravny_text.split()
-str=spravny_text2
 velka2 = 0
-for vel2 in str:
+for vel2 in word_count:
     if vel2.isupper():
         velka2 += 1
 print(f'''Ve Vami zvolenem textu je celkem {velka2} slov,
@@ -93,9 +90,8 @@ print(f'''Ve Vami zvolenem textu je celkem {velka2} slov,
 print(oddelovac_2)
 
 # lowercase words
-str=spravny_text2
 lower = 0
-for low in str:
+for low in word_count:
     if low.islower():
         lower +=1
 print(f'''Ve Vami zvolenem textu je celkem {lower} slov,
@@ -103,9 +99,8 @@ print(f'''Ve Vami zvolenem textu je celkem {lower} slov,
 print(oddelovac_2)
 
 # number of digits
-str=spravny_text2
 numeric = 0
-for num in str:
+for num in word_count:
     if num.isnumeric():
         numeric += 1
         type(numeric)
@@ -114,7 +109,9 @@ print(f'''Ve Vami zvolenem textu je celkem {numeric}
 print(oddelovac)
 
 # bar chart
-cisty_text = [slovo.strip('.,') for slovo in spravny_text2]
+print('Histogram cetnosti - delka : slovo')
+print(oddelovac_2)
+cisty_text = [slovo.strip('.,') for slovo in word_count]
 cislo= [len(slovo) for slovo in cisty_text]
 pocet = {x:cislo.count(x) for x in cislo}
 nejcastejsi_delka = sorted(pocet, key=pocet.get, reverse=False)[:]
@@ -122,13 +119,13 @@ nejcastejsi_delka = sorted(pocet, key=pocet.get, reverse=False)[:]
 for num, hodnota in enumerate(range(len(pocet), 0, -1), 1):
     for index in nejcastejsi_delka:
         velikost = index
-        print(f"{index}: {pocet[index]*'*'} {pocet[index]} x")
+        print(f"{index}: {pocet[index]*'*'} {pocet[index]}")
         nejcastejsi_delka.remove(index)
         break
 print(oddelovac)
 
 # # Sum of all digits
-result= []
+result = []
 for digit in cisty_text:
     if digit.isdigit():
         digit = int(digit)
