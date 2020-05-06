@@ -125,12 +125,20 @@ for num, hodnota in enumerate(range(len(pocet), 0, -1), 1):
         print(f"{index}: {pocet[index]*'*'} {pocet[index]} x")
         nejcastejsi_delka.remove(index)
         break
+print(oddelovac)
 
 # # Sum of all digits
-sum_digit = dict()
-for digit in spravny_text2:
-    sum_digit[digit.isnumeric()]
-    print(sum_digit)
+result= []
+for digit in cisty_text:
+    if digit.isdigit():
+        digit = int(digit)
+        result.append(digit)
+digit = sum(result)
+print(f'''Ve Vami zvolenem textu je soucet vsech 
+        cisel roven: {digit}.''')
+print(oddelovac)
+
+
 
 
 
