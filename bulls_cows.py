@@ -7,13 +7,14 @@ def main():
     greetings()
     number = number_selection()
     print(number)
+    # attempts = True
     attempts = True
     while attempts:
-        attempts += 1
-        # attempts = 0
         player_number = guessed_number()
         game_evaluation(number, player_number)
         game_status(attempts, number, player_number)
+        attempts += 1
+
 # Users greetings
 def greetings():
     return print(f'{SEPARATOR}\nWelcome {name} in Bulls & Cows game!\nThere was generated 4 digit number for you.\n'
@@ -22,12 +23,9 @@ def greetings():
 def number_selection():
     gen_number = ''.join(random.sample("0123456789", 4))
     return gen_number
-# Hide selected number
-def hide_number(number):
-    return len(number) * ["*"], round(1.4 * len(number), 0)
 # Asked to guessed the given number
 def guessed_number():
-    return input(f'{name} enter your number!\n:')
+    return input(f'{name} enter your 4 digit number!\n:')
 # evaluates the user's tip and returns the number of matches.
 def evaluation_of_tip(tip, number, hidden_num):
     for index, num in enumerate(number):
@@ -53,7 +51,7 @@ def game_status(att, number, user_guess):
             level = "Let's rock"
         else:
             level = 'Piece of cake'
-            exit()
         status = f'You won in {att} rounds on {level} difficulty'
         print(status, SEPARATOR_2, sep='\n')
+        exit()
 main()
