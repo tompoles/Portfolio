@@ -47,15 +47,17 @@ users= {
         }
 # user's log in
 pokracovat = 0
-while pokracovat < 3:
+while pokracovat < 2:
     user = input('Zadejte sve prihlasovaci jmeno: ')
     password = input('Vlozte heslo: ')
     if users.get(user) == password:
         print('Pokracuji...')
+        pokracovat = 3
         break
     else:
         print('Uzivatelske jmeno nebo heslo se neshoduje, zadejte znovu')
-        pokracovat += 1
+        pokracovat +=1
+    quit(pokracovat > 3)
 print(oddelovac)
 
 # selection from list
@@ -134,18 +136,3 @@ digit = sum(result)
 print(f'''Ve Vami zvolenem textu je soucet vsech 
         cisel roven: {digit}.''')
 print(oddelovac)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
