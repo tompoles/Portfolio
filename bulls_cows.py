@@ -6,15 +6,12 @@ name = input(f'Initiating...\nType your user name...')
 def main():
     greetings()
     number = number_selection()
-    print(number)
-    # attempts = True
     attempts = True
     while attempts:
         player_number = guessed_number()
         game_evaluation(number, player_number)
         game_status(attempts, number, player_number)
         attempts += 1
-
 # Users greetings
 def greetings():
     return print(f'{SEPARATOR}\nWelcome {name} in Bulls & Cows game!\nThere was generated 4 digit number for you.\n'
@@ -44,14 +41,18 @@ def game_evaluation(number, user_guess):
 def game_status(att, number, user_guess):
     if user_guess == number:
         if att <= 5:
-            level = "Damn I'm good"
+            level = "'Damn I'm good'"
         elif att <= 10:
-            level = 'Come and get some'
+            level = "'Come and get some'"
         elif att <= 13:
-            level = "Let's rock"
+            level = "'Let's rock'"
         else:
-            level = 'Piece of cake'
-        status = f'You won in {att} rounds on {level} difficulty'
+            level = "'Piece of cake'"
+        status = f'{name} you won in {att} rounds on {level} difficulty'
         print(status, SEPARATOR_2, sep='\n')
+        with open("bulls_cows.txt", "a+", newline='') as txt:
+            txt.writelines(status), \
+            txt.write('\n'), \
+            txt.close()
         exit()
 main()
