@@ -24,10 +24,10 @@ def number_selection():
 def guessed_number():
     return input(f'{name} enter your 4 digit number!\n:')
 # evaluates the user's tip and returns the number of matches.
-def evaluation_of_tip(tip, number, hidden_num):
-    for index, num in enumerate(number):
-        if num in tip:
-            hidden_num[index] = num
+# def evaluation_of_tip(tip, number, hidden_num):
+#     for index, num in enumerate(number):
+#         if num in tip:
+#             hidden_num[index] = num
 # def game_evaluation(attempt, player, hidden_number):
 def game_evaluation(number, user_guess):
     cowbull = [0,0]
