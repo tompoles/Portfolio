@@ -52,6 +52,5 @@ def save_csv(data: List[dict]):
                 }
             )
 
-
 if __name__ == '__main__':
     main()
