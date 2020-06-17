@@ -1,12 +1,13 @@
-#  Project 3 - Election Scraper
-
 import csv
 from typing import List
 
 import requests
 from bs4 import BeautifulSoup as bs
+import prettify
+from unicodedata import normalize
 
-URL = "https://volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumnuts=8102"
+
+# URL = "https://volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumnuts=8102"
 
 URLS = ['https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598011&xvyber=8102',
         'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598020&xvyber=8102',
@@ -31,47 +32,56 @@ URLS = ['https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598011&xv
         'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=512176&xvyber=8102',
         'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598232&xvyber=8102',
         'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598691&xvyber=8102',
-        'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598259&xvyber=8102',
-        '']
+        'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598259&xvyber=8102',]
+
 
 def main():
-    answer = get_answer()
-    parsed = pull_data(answer)
-    table = find_tab(parsed)
-    rows = find_row(table)
-    villages = [villages_info(row) for row in rows]
-    print(villages)
-    save_csv(villages)
+    for url in URLS:
+        answer = get_answer(url)
+        parsed = pull_data(answer)
+        header_div = parsed.find_all('table', id='ps311_t1', class_='table')
+        election_div = parsed.find_all('div', class_='t2_470')
+        rows = find_row(election_div)
+        election = [election_info(row) for row in rows]
+        info = county_info(header_div)
+        print(election, info)
+        save_csv_2([info],[election])
 
-def get_answer():
-    return requests.get(URL)
+
+def get_answer(url):
+    return requests.get(url)
 
 def pull_data(ans):
     return bs(ans.text, "html.parser")
 
-def find_tab(cont):
-    return cont.find('table', {'class':'table'})
+def find_row(tables):
+    return [
+        row
+        for table in tables
+        for row in table.find_all('tr')[2:]
+    ]
 
-def find_row(tabl):
-    return tabl.find_all('tr')[2:]
-
-def villages_info(tr):
-    try:
-        num = tr.find_all("td")[0].text
-        location = tr.find_all("td")[1].text
+def county_info(parsed):
+    for contain in parsed:
+        people = contain.find('td',class_='cislo', headers='sa2').text
+        is_env = contain.find('td',class_='cislo', headers='sa3').text
+        submitted = contain.find('td',class_='cislo', headers='sa5').text
         return {
-            "cislo": num,
-            "Obec": location
+            "Volici v seznamu":people,
+            "Vydané obálky":is_env,
+            "Platné hlasy":submitted
         }
-    except AttributeError:
-        print(f'Wrong assigned indexes')
-#
-# def election_info(data):
+def election_info(tr) -> dict:
+        party = tr.find_all("td")[1].text
+        votes = tr.find_all('td')[2].text
+        return {
+            "PARTY": party,
+            "VOTES": votes
+        }
 
-
-def save_csv(data: List[dict]):
-    with open("election.csv", "w", newline="") as csv_file:
-        header = ["Cislo", "Obec","Voliči v seznamu", "Vydané obálky", "Platné hlasy", "Občanská demokratická strana",
+def save_csv_2(data: List[dict], data2):
+    with open('election_data.csv', 'a+',) as csv_file:
+        header = ['Volici v seznamu', 'Vydané obálky', 'Platné hlasy', "Občanská demokratická strana",
                   'Řád národa - Vlastenecká unie', 'CESTA ODPOVĚDNÉ SPOLEČNOSTI', 'Česká str.sociálně demokrat.',
                   'Radostné Česko', 'STAROSTOVÉ A NEZÁVISLÍ', 'STAROSTOVÉ A NEZÁVISLÍ', 'Komunistická str.Čech a Moravy',
                   'Strana zelených', 'ROZUMNÍ-stop migraci,diktát.EU', 'Strana svobodných občanů',
@@ -82,11 +92,14 @@ def save_csv(data: List[dict]):
                   'Strana Práv Občanů']
         writer = csv.DictWriter(csv_file, fieldnames=header)
         writer.writeheader()
-        for index, _ in enumerate(data):
-            writer.writerow(
-                {
-                    "Cislo": data[index]["cislo"],
-                    "Obec": data[index]["Obec"]
 
-                }
-            )
+        for data_row, data2_row in zip(data, data2):
+            row_dict = data_row
+            for party_votes in data2_row:
+                row_dict[party_votes["PARTY"]] = party_votes["VOTES"]
+
+            writer.writerow(row_dict)
+
+
+if __name__ == '__main__':
+    main()

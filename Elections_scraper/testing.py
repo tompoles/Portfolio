@@ -1,78 +1,58 @@
+import csv
+from typing import List
+
 import requests
-from requests import get
-from bs4 import BeautifulSoup
-import pandas as pd
-import numpy as np
+from bs4 import BeautifulSoup as bs
+import prettify
+from unicodedata import normalize
 
-url = "https://www.imdb.com/search/title/?groups=top_1000&ref_=adv_prv"
-headers = {"Accept-Language": "en-US, en;q=0.5"}
-results = requests.get(url, headers=headers)
+URLS = 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598011&xvyber=8102'
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598020&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=511633&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598038&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598046&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=511935&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598062&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598071&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598089&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=552542&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598101&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=511951&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=552607&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598135&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598003&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598143&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598160&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=512192&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=511986&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=552631&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=512176&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598232&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598691&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598259&xvyber=8102',
 
-soup = BeautifulSoup(results.text, "html.parser")
 
-# initiate data storage
-titles = []
-years = []
-time = []
-imdb_ratings = []
-metascores = []
-votes = []
-us_gross = []
+def main():
+    answer = get_answer()
+    parsed = pull_data(answer)
+    header_div = parsed.find_all('table', id='ps311_t1', class_='table')
+    election_div = parsed.find_all('div', class_='t2_470')
+    rows = find_row(parsed)
+    for contain in rows:
+        people = contain.find('td')[3].text
+        is_env = contain.find('td')[4].text
+        submitted = contain.find('td')[6].text
+        return [{
+            "Volici v seznamu": people,
+            "Vydané obálky": is_env,
+            "Platné hlasy": submitted
+                }]
 
-movie_div = soup.find_all('div', class_='lister-item mode-advanced')
+def get_answer():
+    return requests.get(URLS)
 
-# our loop through each container
-for container in movie_div:
-    # name
-    name = container.h3.a.text
-    titles.append(name)
+def pull_data(ans):
+    return bs(ans.text, "html.parser")
 
-    # year
-    year = container.h3.find('span', class_='lister-item-year').text
-    years.append(year)
-
-    # runtime
-    runtime = container.p.find('span', class_='runtime').text if container.p.find('span',
-                                                                                  class_='runtime').text else '-'
-    time.append(runtime)
-
-    # IMDb rating
-    imdb = float(container.strong.text)
-    imdb_ratings.append(imdb)
-
-    # metascore
-    m_score = container.find('span', class_='metascore').text if container.find('span', class_='metascore') else '-'
-    metascores.append(m_score)
-
-    # there are two NV containers, grab both of them as they hold both the votes and the grosses
-    nv = container.find_all('span', attrs={'name': 'nv'})
-
-    # filter nv for votes
-    vote = nv[0].text
-    votes.append(vote)
-
-    # filter nv for gross
-    grosses = nv[1].text if len(nv) > 1 else '-'
-    us_gross.append(grosses)
-
-# pandas dataframe
-movies = pd.DataFrame({
-    'movie': titles,
-    'year': years,
-    'timeMin': time,
-    'imdb': imdb_ratings,
-    'metascore': metascores,
-    'votes': votes,
-    'us_grossMillions': us_gross,
-})
-
-# cleaning data
-movies['year'] = movies['year'].str.extract('(\d+)').astype(int)
-movies['timeMin'] = movies['timeMin'].str.extract('(\d+)').astype(int)
-movies['metascore'] = movies['metascore'].astype(int)
-movies['votes'] = movies['votes'].str.replace(',', '').astype(int)
-movies['us_grossMillions'] = movies['us_grossMillions'].map(lambda x: x.lstrip('$').rstrip('M'))
-movies['us_grossMillions'] = pd.to_numeric(movies['us_grossMillions'], errors='coerce')
-
-# add dataframe to csv file named 'movies.csv'
-movies.to_csv('movies.csv')
+def find_row(tabl):
+    return tabl[0].find_all('tr')[2:]
