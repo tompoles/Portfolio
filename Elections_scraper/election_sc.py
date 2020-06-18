@@ -115,12 +115,15 @@ def county_info(parsed):
             "Platné hlasy":submitted
         }
 def election_info(tr) -> dict:
+    try:
         party = tr.find_all("td")[1].text
         votes = tr.find_all('td')[2].text
         return {
             "PARTY": party,
             "VOTES": votes
         }
+    except AttributeError:
+        print(f'Wrong assigned indexes')
 
 def save_csv_2(data, data2):
     with open('election_data.csv', 'w',) as csv_file:
