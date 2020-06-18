@@ -11,7 +11,6 @@ def main():
     table = find_tab(parsed)
     rows = find_row(table)
     villages = [villages_info(row) for row in rows]
-    print(villages)
     save_csv(villages)
 
 
@@ -88,10 +87,9 @@ def second():
         rows = find_row_2(election_div)
         election = [election_info(row) for row in rows]
         info = county_info(header_div)
-        print(election, info)
         infos.append(info)
         elections.append(election)
-    csv2 = save_csv_2(infos,elections)
+        save_csv_2(infos,elections)
 
 
 def get_answer_2(url):
