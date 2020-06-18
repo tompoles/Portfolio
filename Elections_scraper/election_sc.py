@@ -150,7 +150,7 @@ def cvs_merger(csv1, csv2):
     df1 = pd.read_csv(csv1)
     df2 = pd.read_csv(csv2)
     result = pd.concat([df1, df2], axis=1, ignore_index=False)
-    result.to_csv("election")
+    result.to_csv("election.csv")
 
 if __name__ == '__main__':
     main()
