@@ -12,7 +12,7 @@ def main():
     rows = find_row(table)
     villages = [villages_info(row) for row in rows]
     print(villages)
-    csv1 = save_csv(villages)
+    save_csv(villages)
 
 
 def get_answer():
@@ -155,4 +155,4 @@ def cvs_merger(csv1, csv2):
 if __name__ == '__main__':
     main()
     second()
-    cvs_merger(csv1)
+    cvs_merger('election1.csv', 'election_data.csv')
