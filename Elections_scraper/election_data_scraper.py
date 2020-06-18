@@ -3,11 +3,8 @@ from typing import List
 
 import requests
 from bs4 import BeautifulSoup as bs
-import prettify
-from unicodedata import normalize
+import pandas as pd
 
-
-# URL = "https://volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumnuts=8102"
 
 URLS = ['https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598011&xvyber=8102',
         'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598020&xvyber=8102',
@@ -32,10 +29,13 @@ URLS = ['https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598011&xv
         'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=512176&xvyber=8102',
         'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598232&xvyber=8102',
         'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598691&xvyber=8102',
-        'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598259&xvyber=8102',]
-
+        'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=598259&xvyber=8102',
+        # 'https://volby.cz/pls/ps2017nss/ps311?xjazyk=CZ&xkraj=14&xobec=507423&xvyber=8102',
+        ]
 
 def main():
+    infos = []
+    elections = []
     for url in URLS:
         answer = get_answer(url)
         parsed = pull_data(answer)
@@ -45,8 +45,9 @@ def main():
         election = [election_info(row) for row in rows]
         info = county_info(header_div)
         print(election, info)
-        save_csv_2([info],[election])
-
+        infos.append(info)
+        elections.append(election)
+    save_csv_2(infos,elections)
 
 def get_answer(url):
     return requests.get(url)
@@ -80,7 +81,7 @@ def election_info(tr) -> dict:
         }
 
 def save_csv_2(data: List[dict], data2):
-    with open('election_data.csv', 'a+',) as csv_file:
+    with open('election1.csv', 'a',) as csv_file:
         header = ['Volici v seznamu', 'Vydané obálky', 'Platné hlasy', "Občanská demokratická strana",
                   'Řád národa - Vlastenecká unie', 'CESTA ODPOVĚDNÉ SPOLEČNOSTI', 'Česká str.sociálně demokrat.',
                   'Radostné Česko', 'STAROSTOVÉ A NEZÁVISLÍ', 'STAROSTOVÉ A NEZÁVISLÍ', 'Komunistická str.Čech a Moravy',
@@ -100,6 +101,11 @@ def save_csv_2(data: List[dict], data2):
 
             writer.writerow(row_dict)
 
+
+df1 = pd.read_csv('election1.csv')
+df2 = pd.read_csv('election_data.csv')
+
+df = df1.merge(df2, on='Obec')
 
 if __name__ == '__main__':
     main()

@@ -12,7 +12,7 @@ def main():
     rows = find_row(table)
     villages = [villages_info(row) for row in rows]
     print(villages)
-    save_csv(villages)
+    csv1 = save_csv(villages)
 
 
 def get_answer():
@@ -91,7 +91,8 @@ def second():
         print(election, info)
         infos.append(info)
         elections.append(election)
-    save_csv_2(infos,elections)
+    csv2 = save_csv_2(infos,elections)
+
 
 def get_answer_2(url):
     return requests.get(url)
@@ -145,11 +146,13 @@ def save_csv_2(data, data2):
 
             writer.writerow(row_dict)
 
-df1 = pd.read_csv("election1.csv")
-df2 = pd.read_csv("election_data.csv")
-result = pd.concat([df1, df2], axis=1, ignore_index=False)
-result.to_csv("election")
+def cvs_merger(csv1, csv2):
+    df1 = pd.read_csv(csv1)
+    df2 = pd.read_csv(csv2)
+    result = pd.concat([df1, df2], axis=1, ignore_index=False)
+    result.to_csv("election")
 
 if __name__ == '__main__':
     main()
     second()
+    cvs_merger(csv1)
