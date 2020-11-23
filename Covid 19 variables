@@ -1,0 +1,75 @@
+SELECT cb.country, 
+	   cb.date, 
+	   (CASE WHEN WEEKDAY(cb.date) >=5 THEN '1'  
+	    ELSE '0' END) as 'Workdays/Weekends', 
+	   (CASE WHEN MONTH(cb.date) IN (12, 1, 2) THEN '0'
+      	WHEN MONTH(cb.date) IN (3, 4, 5) THEN '1'
+      	WHEN MONTH(cb.date) IN (6, 7, 8) THEN '2'
+       	ELSE '3' END) as 'Season', 
+       	c.population_density, 
+       	cb.confirmed, 
+       	cbd.confirmed as Diff_confirmed,
+        e.GDP_per_capita, 
+        e.Gini_index, 
+        e.Infant_mortality, 
+        c.median_age_2018, 
+        le2.life_exp_diff,
+        w4.Max_gust, 
+        w4.AVG_day_temp, 
+        w4.Sum_hours,
+        r3.religion,
+        r3.Religion_share
+FROM covid19_basic cb
+JOIN covid19_basic_differences cbd 
+ON cb.country = cbd.country AND cb.date = cbd.date
+JOIN (SELECT e.country, ROUND((e.GDP/e.population),2) as GDP_per_capita, mortaliy_under5 as Infant_mortality,
+	  e.gini as Gini_index
+	  FROM economies e
+	  WHERE year < '2017' 
+	  GROUP BY e.country) e
+ON cb.country = e.country 
+JOIN  countries c
+ON e.country = c.country
+JOIN  (SELECT a.country, a.life_exp_1970 , b.life_exp_2015, round(b.life_exp_2015 - a.life_exp_1970, 2) as life_exp_diff
+		FROM (
+			    SELECT le.country , le.life_expectancy as life_exp_1970
+			    FROM life_expectancy le 
+			    WHERE year = 1970) a 
+	    JOIN (
+			    SELECT le.country , le.life_expectancy as life_exp_2015
+			    FROM life_expectancy le 
+			    WHERE year = 2015) b
+	    ON a.country = b.country) le2
+ON e.country = le2.country
+JOIN  (SELECT c.country, c.date, lt.iso3 , c2.capital_city , w3.AVG_day_temp, w3.Max_gust, w3.Sum_hours
+			FROM covid19_basic as c
+			JOIN lookup_table lt 
+			    ON c.country = lt.country 
+			JOIN countries c2
+			    ON lt.iso3 = c2.iso3
+			LEFT JOIN (  SELECT we.city, we.date, we.Max_gust, we.AVG_day_temp, w2.Sum_hours
+			FROM   (SELECT city, date, max(gust) as Max_gust, avg(temp) as Max_day_temp
+				    FROM weather we 
+				    WHERE hour in ('6' ,'9' , '12', '15', '18')
+				    GROUP BY city, date ) we
+			LEFT JOIN   (SELECT w2.city, w2.date, sum(CASE WHEN w2.rain > 0 THEN +3 END) as Sum_hours
+					FROM weather w2 
+					GROUP BY city, date) w2
+					ON we.date = w2.date
+					AND we.city = w2.city) w3
+				ON c2.capital_city = w3.city AND c.date = w3.date) w4
+ON w4.date = cb.date AND cb.country = w4.country
+JOIN  (SELECT r.country , r.religion , round( r.population / r2.total_population_2020 * 100, 2 ) as religion_share
+			FROM religions r 
+			JOIN (
+			        SELECT r.country , r.year,  sum(r.population) as total_population_2020
+			        FROM religions r 
+			        WHERE r.year = 2020 and r.country != 'All Countries'
+			        GROUP BY r.country
+			    ) r2
+			    ON r.country = r2.country
+			    AND r.year = r2.year
+			    AND r.population > 0
+			    GROUP BY religion, country ) r3
+ON cb.country = r3.country
+WHERE cb.DATE > '2020-09-01' -- aprox. start of 2nd wave
